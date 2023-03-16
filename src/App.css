@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
+#root {
+  --pimary-marine-blue: hsl(213, 96%, 18%);
+  --primary-purplish-blue: hsl(243, 100%, 62%);
+  --primary-pastel-blue: hsl(228, 100%, 84%);
+  --primary-light-blue: hsl(206, 94%, 87%);
+  --primary-strawberry-red: hsl(354, 84%, 57%);
+
+  --secondary-cool-gray: hsl(231, 11%, 63%);
+  --secondary-light-gray: hsl(229, 24%, 87%);
+  --secondary-magnolia: hsl(217, 100%, 97%);
+  --secondary-alabaster: hsl(231, 100%, 99%);
+  --secondary-white: hsl(0, 0%, 100%);
+
+  --font-weight-regular: 400;
+  --font-weight-medium : 500;
+  --font-weight-bold : 700;
+
+  font-size: 16px;
+  font-family: 'Ubuntu', sans-serif;
+  height: 100%;
+}
