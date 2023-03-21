@@ -15,7 +15,6 @@ const Label = styled.label`
     display: flex;
     gap: 1em;
     border-radius: 12px;
-    
 `
 
 export default Label

@@ -27,7 +27,20 @@ const Form = styled.form`
     /* gap: 0.5rem; */
 `
 
+const PlanSpan = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    > * {
+      flex-grow: 1;
+    }
+  }
+  
+`
 const BillingPlanWrapper = styled.div`
+margin-top: 1em;
     display: flex;
     justify-content: space-around;
     background-color: var(--secondary-magnolia);
@@ -79,7 +92,8 @@ export default function PlanSelectionForm() {
       const {ref: billingSwitchRef , ...billingSwitchProps } = {...register("billingPlan")}
 
     return <Form onSubmit={handleSubmit(onSubmit)}>
-      <span style={{display: "grid", gap: "1rem"}}>
+      <span>
+      <PlanSpan>
     <Label>
     <InputRadio type="radio" {...register("selectedPlan")} id={OPlanType.Arcade} name="selectedPlan" value={OPlanType.Arcade}
              />
@@ -109,6 +123,7 @@ export default function PlanSelectionForm() {
              </span>
         
     </Label>
+    </PlanSpan>
     <BillingPlanWrapper>
     <Billinglabel selected={billingPlan} style={{textAlign: "end"}}>Monthly</Billinglabel>
       <Switch innerRef={billingSwitchRef} onChecked={setBillingPlan} {...billingSwitchProps} />
