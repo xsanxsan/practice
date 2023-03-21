@@ -1,27 +1,41 @@
 import { createContext, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import mobileSideImage from './assets/bg-sidebar-mobile.svg'
+import desktopSideImage from './assets/bg-sidebar-desktop.svg'
 import './App.css'
 import styled from 'styled-components';
-import Footer from './components/Footer/Footer';
 import FormSteps from './components/FormSteps/FormSteps';
 import FormContent from './components/FormContent/FormContent';
-import { FormStepId, form, FormStep, FORM_STATE, FormState } from './components/FormContent/Form';
+import { FORM_STATE, FormState } from './components/FormContent/Form';
 import FormStateContext from './components/FormContent/FormContext';
-import FormSteps2 from './components/FormSteps/FormSteps copy';
-import { useForm } from 'react-hook-form';
+import { DesktopWrapper } from './components/common/DesktopWrapper'
 
 const MainApp = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: var(--secondary-magnolia);
+  place-content: center;
+  @media (min-width: 1024px) {
+    align-items: center;
+    place-content: center;
+  }
 `
 
 const Content = styled.div`
   flex-grow: 1;
-  border: 1px solid red;
   background-color: var(--secondary-magnolia);
   position: relative;
+  @media (min-width: 1024px) {
+    display: flex;
+    max-height: 40rem;
+    max-width: 70rem;
+    width: 100%;
+    background-color: var(--secondary-white);
+    border-radius: 15px;
+    padding: 0.5rem;
+    align-content: center;
+  }
 `
 
 const ContentWrapper = styled.div`
@@ -32,6 +46,11 @@ const ContentWrapper = styled.div`
   left: 0;
   display: flex;
   flex-direction: column;
+  @media (min-width: 1024px) {
+    position: relative;
+    flex-direction: row;
+    height: 100%;
+  }
 `
 
 const SideBarImage = styled.div`
@@ -41,30 +60,23 @@ const SideBarImage = styled.div`
   height: 12em;
   display: flex;
   flex-direction: row;
+  @media (min-width: 1024px) {
+    background-image: url(${desktopSideImage});
+    height: 100%;
+    width: 26em;
+    border-radius: 15px;
+    justify-content: center;
+  }
   `
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+const SpanBadSolution = styled.div`
+@media (min-width: 1024px) {
+    display: none;
+  }
 `
-
 function App() {
 
   const [form, setForm] = useState<FormState>(FORM_STATE)
-  const {register, handleSubmit} = useForm({
-    reValidateMode: 'onBlur',
-    mode: 'onTouched',
-    // shouldUseNativeValidation: true
-  })
-  const onSubmit = (data) => {
-    console.log(data);
-  }
-
-  const handleNext = () => {
-    if (form.currentStep < Object.keys(form.steps).length - 1) 
-    setForm((prev) => {return {...prev, currentStep: prev.currentStep+1}})
-}
 
   return (
     <FormStateContext.Provider
@@ -74,17 +86,15 @@ function App() {
             }}
           >
       <MainApp className="App">
-      <Form onSubmit={handleSubmit(onSubmit)}>
         <Content>
-          <SideBarImage />
+          <SideBarImage>
+          <DesktopWrapper><FormSteps /></DesktopWrapper>
+          </SideBarImage>
           <ContentWrapper>
-            <FormSteps />
-            <FormContent register={register}/>
+            <SpanBadSolution><FormSteps /></SpanBadSolution>
+            <FormContent />
           </ContentWrapper>
         </Content>
-        
-        
-        </Form>
     </MainApp>
       </FormStateContext.Provider>
   )

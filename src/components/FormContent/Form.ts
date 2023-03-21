@@ -1,47 +1,69 @@
 type FormStep = {
     title: string
     description?: string
-    // stepId: FormStepId
     label: string
+    additionalText: string
 }
 
-type FormStepId = 0 | 1 | 2 | 3
+export enum FormStepId {
+  PERSONAL_INFO,
+  PLAN,
+  ADD_ON,
+  SUMMARY
+}
 
 export const formRecords: FormStep[] = [
     {
         title: 'Personal info', 
         description: 'Please provide your name, email address, and phone number.', 
-        // stepId: 0,
-        label: "1"
+        label: "1",
+        additionalText: "Your info"
     }, 
     {
         title: 'Select your plan', 
         description: 'You have the options of monthly or yearly billing', 
-        label: "2"
+        label: "2",
+        additionalText: "Select Plan"
     },
     {
         title: 'Pick add-ons', 
         description: 'Add-ons help enchance your gaming experience', 
-        label: "3"
+        label: "3",
+        additionalText: "Add-ons"
     },
     {
         title: 'Finishing up', 
         description: 'Double-check everything looks OK before confirming', 
-        label: "4"
+        label: "4",
+        additionalText: "Summary"
     }]
 
-    type PlanType = 'Arcade' | 'Advanced' | 'Pro'
-    type BillingPlan = 'Monthly' | 'Yearly'
+    export const OPlanType = {
+        Arcade: 'Arcade',
+        Advanced: 'Advanced',
+        Pro: 'Pro',
+    } as const;
+      
+    export type PlanType = typeof OPlanType[keyof typeof OPlanType];
 
-    export type FormStepState = {
+    export const OBillingPlan = {
+        Monthly: false,
+        Yearly: true
+      } as const;
+
+    export type BillingPlan = typeof OBillingPlan[keyof typeof OBillingPlan];
+
+    export type FormStepState<T> = {
         valid: boolean, 
         dirty: boolean,
-        values: FormInfoValues | FormPlanValues | FormAddonValues | FormSummary
+        values: T
     }
 
     export type FormState = {
         currentStep: number;
-        steps: Record<FormStepId, FormStepState>
+        steps: Record<FormStepId.PERSONAL_INFO, FormStepState<FormInfoValues>> & 
+        Record<FormStepId.PLAN, FormStepState<FormPlanValues>> & 
+        Record<FormStepId.ADD_ON, FormStepState<FormAddonValues>> & Record<FormStepId.SUMMARY, FormStepState<{}>>
     }
 
     export type FormInfoValues = {
@@ -58,7 +80,7 @@ export const formRecords: FormStep[] = [
     export type FormAddonValues = {
         onlineService: boolean,
         largerStorage: boolean,
-        customizableProfile: boolean,
+        customTheme: boolean,
     }
 
     export type FormSummary = {}
@@ -80,7 +102,7 @@ export const formRecords: FormStep[] = [
             dirty: false,
             values: {
               selectedPlan: "Arcade",
-              billingPlan: "Monthly"
+              billingPlan: false
             }
           },
           2: {
@@ -88,7 +110,7 @@ export const formRecords: FormStep[] = [
             dirty: false,
             values: {
               onlineService: false,
-              customizableProfile: false,
+              customTheme: false,
               largerStorage: false
             }
           },
@@ -100,4 +122,27 @@ export const formRecords: FormStep[] = [
         }
       }
 
-export {type FormStep, type FormStepId, FORM_STATE }
+      export const calculateTotalPrice = (form: FormState): number => {
+        const selectedBillingPlan = form.steps[FormStepId.PLAN].values.billingPlan
+        let total = 0;
+        switch (form.steps[FormStepId.PLAN].values.selectedPlan) {
+          case "Arcade":
+            total = total + 9 * 10
+            break
+          case "Advanced":
+            total = total + 12 * 10
+            break
+          case "Pro": 
+            total = total + 15 * 10
+            break
+        }
+        if (form.steps[FormStepId.ADD_ON].values.onlineService) total = total + 1 * 10
+        if (form.steps[FormStepId.ADD_ON].values.largerStorage) total = total + 2 * 10
+        if (form.steps[FormStepId.ADD_ON].values.customTheme) total = total + 2 * 10
+        if (selectedBillingPlan === OBillingPlan.Monthly) {
+          return (total + total / 5)/ 12
+        }
+        return total 
+      }
+      
+export {type FormStep, FORM_STATE }

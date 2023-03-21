@@ -3,7 +3,6 @@ import StyledButton from "../common/StyledButton"
 import { useFormContext } from "../FormContent/FormContext"
 
 const FooterWrapper = styled.footer`
-  border: 1px solid rebeccapurple;
   height: 5em;
   background-color: var(--white);
   display: flex;
@@ -14,11 +13,6 @@ const FooterWrapper = styled.footer`
 
 export default function Footer() {
     const {form, setForm} = useFormContext()
-
-    const handleNext = () => {
-        if (form.currentStep < Object.keys(form.steps).length - 1) 
-        setForm((prev) => {return {...prev, currentStep: prev.currentStep+1}})
-    }
 
     const handlePrev = () => {
         setForm((prev) => {return {...prev, currentStep: prev.currentStep-1}})

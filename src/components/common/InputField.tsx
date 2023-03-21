@@ -1,4 +1,7 @@
-import styled from "styled-components";
+import { ComponentProps, ComponentPropsWithRef } from "react";
+import AnimateHeight from "react-animate-height";
+import { FieldError, FieldErrorsImpl, Merge, MultipleFieldErrors, RefCallBack } from "react-hook-form";
+import styled, { keyframes } from "styled-components";
 
 const InputField = styled.input`
 &:focus {
@@ -12,24 +15,41 @@ border: 1px solid var(--secondary-cool-gray);
 border-radius: 5px;
 `
 
-// const InputWrapper = styled.div`
-//     padding: 0.5em 0;
-// `
+const errorAnimation = keyframes`
+ 0% { margin-left: -10px; opacity: 0}
+ 100% { margin-left: 0px; opacity: 1 }
+ `
+ 
+const Errors = styled.div`
+    color: red;
+    font-size: 0.75rem;
+    animation-name: ${errorAnimation};
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+`
 
-// interface InputProps {
-//     placeholder?: string
-//     label: string
-//     type?: React.HTMLInputTypeAttribute
-//     pattern?: string
-//     required?: boolean
-// }
+export interface InputProps extends React.ComponentPropsWithRef<"input"> {
+    errors: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | MultipleFieldErrors | undefined;
+    label: string,
+    innerRef: RefCallBack,
+  }
 
-// export default function Input({placeholder, label, type, pattern, required}: InputProps) {
-//     return <InputWrapper>
-//         <label>{label}     
-//         <InputField type={type} id="email"
-//        pattern={pattern} required={required} placeholder={placeholder} /></label>
-//     </InputWrapper>
-// }
-
-export default InputField
+export default function Input({ errors, label, innerRef, ...inputProps}: InputProps) {
+    const getHeight = (errors: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | MultipleFieldErrors | undefined) => {
+        if (errors){
+            return  Object.values(errors).length * 18
+        }
+        return 0
+      }
+      
+    return <label>{label}    
+    <InputField ref={innerRef} {...inputProps}/>
+    <AnimateHeight
+    id="example-panel"
+    duration={500}
+    height={getHeight(errors)} // see props documentation below
+  >
+    {errors && Object.values(errors).map(value => <Errors key={value}>{value}</Errors>)}
+  </AnimateHeight>
+    </label>
+}

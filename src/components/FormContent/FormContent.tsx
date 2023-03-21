@@ -1,10 +1,12 @@
 import { useContext } from "react"
 import { FieldValues, UseFormRegister } from "react-hook-form"
 import styled from "styled-components"
+import AddOnForm from "./AddOnForm"
 import { FormStep, FormStepId, formRecords } from "./Form"
 import { useFormContext } from "./FormContext"
 import PersonalInfoForm from "./PersonalInfoForm"
 import PlanSelectionForm from "./PlanSelectionForm"
+import Summary from "./Summary"
 
 const FormWrapper = styled.div`
   background-color: var(--secondary-white);
@@ -13,6 +15,9 @@ const FormWrapper = styled.div`
   border-radius: 15px;
   padding: 1em;
   overflow: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 `
 
 const Title = styled.h1`
@@ -27,29 +32,27 @@ const Paragraph = styled.p`
     padding-bottom: 0.75rem;
 `
 
-const renderCurrentFormStep = (currentStep: number, register: UseFormRegister<FieldValues>) => {
+const renderCurrentFormStep = (currentStep: number) => {
     switch (currentStep) {
-        case 0: 
-        return <PersonalInfoForm register={register}/>
-        case 1:
-            return <PlanSelectionForm register={register} />
-        case 2: 
-            return <></>
-        case 3:
-            return <></>
+        case FormStepId.PERSONAL_INFO: 
+        return <PersonalInfoForm />
+        case FormStepId.PLAN:
+            return <PlanSelectionForm />
+        case FormStepId.ADD_ON: 
+            return <AddOnForm />
+        case FormStepId.SUMMARY:
+            return <Summary />
     }
 }
-interface Props {
-    register: UseFormRegister<FieldValues>
-}
-export default function FormContent({register}: Props) {
+
+export default function FormContent() {
     const { form, setForm } = useFormContext();
 
     return <FormWrapper>
     <Title>{formRecords[form.currentStep].title}</Title>
     { formRecords[form.currentStep].description && <Paragraph>{formRecords[form.currentStep].description}</Paragraph>}
     { 
-        renderCurrentFormStep(form.currentStep, register)
+        renderCurrentFormStep(form.currentStep)
     }
     </FormWrapper>
 }
